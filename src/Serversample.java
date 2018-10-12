@@ -22,7 +22,7 @@ public class Serversample
 
 			socket = server.accept(); 
 			System.out.println("Client accepted"); 
-
+			socket.setSoTimeout(5000);
 			// takes input from the client socket 
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream())); 
 
