@@ -1,4 +1,6 @@
 
 public interface ServerCallback {
-	public void serverGotClosed();
+	public void IdReceived(Server server);
+
+	public void serverGotClosed(Server server);
 }
