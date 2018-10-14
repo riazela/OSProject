@@ -13,6 +13,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 public class Server {
 	
@@ -29,7 +30,6 @@ public class Server {
 					 serverSocket = new ServerSocket(port);
 					 serverSocket.setSoTimeout(1000);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return;
 				}
@@ -37,14 +37,13 @@ public class Server {
 				while (listeningForNewServers) {
 					Socket s;
 					try {
-//							TODO: check if we need
 						s = serverSocket.accept();
+						Logger.print("someone connected");
 						new Server(s, false);
 					}
 					catch (SocketTimeoutException e){
 						continue;
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					
@@ -54,8 +53,17 @@ public class Server {
 		t.start();
 	}
 	
+	public static void stopEverything() {
+		listeningForNewServers = false;
+		for (Iterator iterator = allServers.values().iterator(); iterator.hasNext();) {
+			Server server = (Server) iterator.next();
+			server.close();
+		}
+	}
+	
 	public static void ConnectToServers(String[] list) {
 		String[] ipPort;
+		numberOfServers = list.length;
 		for (int i = 0; i < list.length; i++) {
 			ipPort = list[i].split(":");
 			String IP = ipPort[0];
@@ -63,13 +71,13 @@ public class Server {
 			try {
 				Socket s = new Socket(IP, Integer.parseInt(port));
 				new Server(s, true);
-				System.out.println("connected to "+ list[i]);
+				Logger.print("connected to "+ list[i]);
 			} catch (NumberFormatException e) {
 				System.out.println(e);
 			} catch (UnknownHostException e) {
-				System.out.println("cannot connect to "+ list[i]);
+				Logger.print("cannot connect to "+ list[i]);
 			} catch (IOException e) {
-				System.out.println("cannot connect to "+ list[i]);
+				Logger.print("cannot connect to "+ list[i]);
 			}
 		}
 	}
@@ -116,7 +124,6 @@ public class Server {
 		try {
 			socket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -221,7 +228,6 @@ public class Server {
 		try {
 			socket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
