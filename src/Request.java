@@ -6,6 +6,13 @@ public class Request implements Comparable<Request> {
 	RequestCallback callback;
 
 	
+	/***
+	 * 
+	 * @param serverId: is the same as Lamport.serverId if the request is from a client
+	 * @param timeStamp: timestamp of the request
+	 * @param requestType: this is the request type, it is either 'r' or 'w'
+	 * @param requestCallback: this is the client who has asked for the request
+	 */
 	public Request(int serverId, int timeStamp, char requestType, RequestCallback requestCallback) {
 		this.serverId = serverId;
 		this.timeStamp = timeStamp;
