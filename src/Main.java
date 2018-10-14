@@ -19,6 +19,7 @@ public class Main {
 		
 //		reading the id and the other servers
 		int id = Integer.parseInt(fileScanner.nextLine());
+		Lamport.setServerId(id);
 		int port = Integer.parseInt(fileScanner.nextLine());
 		int clientPort = Integer.parseInt(fileScanner.nextLine());
 		ArrayList<String> serversAddress = new ArrayList<String>();
@@ -28,10 +29,10 @@ public class Main {
 				serversAddress.add(line);
 		}
 		fileScanner.close();
-	
+
+		Server.startListening(port);
 		Server.ConnectToServers(serversAddress.toArray(new String[0]));
 		System.out.println("waiting for connections");
-		Server.startListening(port);
 		while (!scanner.nextLine().equals("close"));
 		Logger.print("closing everything");
 		Server.stopEverything();

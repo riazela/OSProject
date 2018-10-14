@@ -60,8 +60,9 @@ public class Server {
 	
 	public static void stopEverything() {
 		listeningForNewServers = false;
-		for (Iterator iterator = allServers.values().iterator(); iterator.hasNext();) {
-			Server server = (Server) iterator.next();
+		Integer[] keys = allServers.keySet().toArray(new Integer[0]);
+		for (Integer i:keys) {
+			Server server = allServers.get(i);
 			server.close();
 		}
 	}
@@ -149,6 +150,18 @@ public class Server {
 			}
 		}
 	}
+	
+	public void sendRequest(int timestamp, String type) {
+		synchronized (outputStream) {
+			try {
+				outputStream.write(Clock.increment()+":"+"request:"+timestamp+":"+type+"\n");
+				outputStream.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	
 	private void setID(int id) {
 		if (this.id == -1) {
