@@ -23,16 +23,16 @@ public class Main {
 		ArrayList<String> serversAddress = new ArrayList<String>();
 		while (fileScanner.hasNextLine()) {
 			String line = fileScanner.nextLine();
-			if (line != "")
-				serversAddress.add(fileScanner.nextLine());
+			if (!line.equals(""))
+				serversAddress.add(line);
 		}
 		fileScanner.close();
 	
 		Server.ConnectToServers(serversAddress.toArray(new String[0]));
 		System.out.println("waiting for connections");
 		Server.startListening(port);
-		while (scanner.nextLine()!="close");
-		
+		while (!scanner.nextLine().equals("close"));
+		Logger.print("closing everything");
 		Server.stopEverything();
 		
 	}

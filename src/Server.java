@@ -17,7 +17,7 @@ import java.util.Iterator;
 
 public class Server {
 	
-	public static Hashtable<Integer, Server> allServers;
+	public static Hashtable<Integer, Server> allServers = new Hashtable<Integer, Server>();
 	public static boolean listeningForNewServers = true;
 	public static int numberOfServers = 0;
 	
@@ -47,6 +47,11 @@ public class Server {
 						e.printStackTrace();
 					}
 					
+				}
+				try {
+					serverSocket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 		});
