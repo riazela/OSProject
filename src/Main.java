@@ -20,6 +20,7 @@ public class Main {
 //		reading the id and the other servers
 		int id = Integer.parseInt(fileScanner.nextLine());
 		int port = Integer.parseInt(fileScanner.nextLine());
+		int clientPort = Integer.parseInt(fileScanner.nextLine());
 		ArrayList<String> serversAddress = new ArrayList<String>();
 		while (fileScanner.hasNextLine()) {
 			String line = fileScanner.nextLine();

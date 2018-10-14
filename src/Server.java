@@ -142,7 +142,7 @@ public class Server {
 		Logger.print(this, "Sending my id to server with id  " + this.id);
 		synchronized (outputStream) {
 			try {
-				outputStream.write("id:"+i+"\n");
+				outputStream.write(Clock.increment()+":"+"id:"+i+"\n");
 				outputStream.flush();
 			} catch (IOException e) {
 				receivedCloseMessage();
@@ -174,7 +174,7 @@ public class Server {
 	private void askForID() {
 		synchronized (outputStream) {
 			try {
-				outputStream.write("give_me_id\n");
+				outputStream.write(Clock.increment()+":"+"give_me_id\n");
 				outputStream.flush();
 			} catch (IOException e) {
 				receivedCloseMessage();
@@ -196,7 +196,8 @@ public class Server {
 				return;
 			} 
 			String[] messageParts = (messagestr.split("\n"))[0].split(":");
-			switch (messageParts[0]) {
+			Clock.adjustTimer(Integer.parseInt(messageParts[0]));
+			switch (messageParts[1]) {
 			case "close":
 				receivedCloseMessage();
 				return;
@@ -204,7 +205,7 @@ public class Server {
 				sendID();
 				break;
 			case "id":
-				setID(Integer.parseInt(messageParts[1]));
+				setID(Integer.parseInt(messageParts[2]));
 				break;
 			default:
 				break;
@@ -219,7 +220,7 @@ public class Server {
 		socket_is_closed = true;
 		try {
 			synchronized (outputStream) {
-				outputStream.write("close");
+				outputStream.write(Clock.increment()+":"+"close");
 				outputStream.flush();
 			}
 		} catch (IOException e) {
