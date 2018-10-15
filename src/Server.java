@@ -21,6 +21,14 @@ public class Server {
 	public static boolean listeningForNewServers = true;
 	public static int numberOfServers = 0;
 	
+	public static final String CLOSE_CODE = "close";
+	public static final String REQ_CODE = "req";
+	public static final String RELEASE_CODE = "release";
+	public static final String ACK_CODE = "ack";
+	public static final String ASKID_CODE = "give_me_id";
+	public static final String GIVEID_CODE = "id";
+	
+	
 	public static void startListening(int port) {
 		Thread t = new Thread(new Runnable() {
 			@Override
@@ -172,6 +180,13 @@ public class Server {
 		}
 	}
 	
+	public void receivedRequest(int timestamp, String type) {
+		char chartype = type.charAt(0);
+		Request req = new Request(this.id, timestamp, chartype, (t) -> {});
+		Lamport.addNewRequest(req);
+		sendAck(timestamp);
+	}
+	
 	public void sendRequest(int timestamp, String type) {
 		synchronized (outputStream) {
 			try {
@@ -181,6 +196,10 @@ public class Server {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void receivedRelease(int timestamp) {
+		Lamport.releaseRequest(timestamp, this.id);
 	}
 	
 	public void sendRelease(int timestamp, String type) {
@@ -252,12 +271,36 @@ public class Server {
 			case "id":
 				setID(Integer.parseInt(messageParts[2]));
 				break;
+			case "release":
+				this.receivedRelease(Integer.parseInt(messageParts[2]));
+				break;
+			case "request":
+				this.receivedRequest(Integer.parseInt(messageParts[2]), messageParts[3]);
+				break;
+			case "ack":
+				this.receivedAck(Integer.parseInt(messageParts[2]));
+				break;
 			default:
 				break;
 			}
 		}
 	}
 	
+	
+	public void receivedAck(int timestamp) {
+		Lamport.receivedAck(timestamp);
+	}
+	
+	public void sendAck(int timestamp) {
+		synchronized (outputStream) {
+			try {
+				outputStream.write(Clock.increment()+":"+"ack:"+timestamp+"\n");
+				outputStream.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	public void close() {
 		if (socket_is_closed)
