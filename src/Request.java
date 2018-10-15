@@ -4,6 +4,7 @@ public class Request implements Comparable<Request> {
 	int timeStamp;
 	char requestType;
 	RequestCallback callback;
+	int numberOfAcks;
 
 	
 	/***
@@ -18,6 +19,7 @@ public class Request implements Comparable<Request> {
 		this.timeStamp = timeStamp;
 		this.requestType = requestType;
 		this.callback = requestCallback;
+		this.numberOfAcks = 0;
 	}
 
 

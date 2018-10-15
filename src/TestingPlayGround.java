@@ -33,6 +33,9 @@ public class TestingPlayGround {
 
 		public static void main(String args[]) 
 		{ 
-			TestingPlayGround server = new TestingPlayGround(5000); 
+//			TestingPlayGround server = new TestingPlayGround(5000); 
+			char a = 'a';
+			String b = "hello " + a;
+			System.out.println(b);
 		} 
 }

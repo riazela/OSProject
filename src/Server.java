@@ -88,6 +88,27 @@ public class Server {
 		}
 	}
 	
+	public static void sendReqToEveryone(int timestamp, String type) {
+		// it will wait until the number os servers is not enough yet
+		while (allServers.size() < numberOfServers);
+		
+		Integer[] keys = allServers.keySet().toArray(new Integer[0]);
+		for (Integer i:keys) {
+			Server server = allServers.get(i);
+			server.sendRequest(timestamp, type);
+		}
+	}
+	
+	public static void sendReleaseToEveryone(int timestamp, String type) {
+		Integer[] keys = allServers.keySet().toArray(new Integer[0]);
+		for (Integer i:keys) {
+			Server server = allServers.get(i);
+			server.sendRelease(timestamp, type);
+		}
+	}
+	
+	
+	
 	
 	
 	// Object Level Part
@@ -155,6 +176,17 @@ public class Server {
 		synchronized (outputStream) {
 			try {
 				outputStream.write(Clock.increment()+":"+"request:"+timestamp+":"+type+"\n");
+				outputStream.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void sendRelease(int timestamp, String type) {
+		synchronized (outputStream) {
+			try {
+				outputStream.write(Clock.increment()+":"+"release:"+timestamp+":"+type+"\n");
 				outputStream.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
