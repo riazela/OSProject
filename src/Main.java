@@ -33,9 +33,11 @@ public class Main {
 		Server.startListening(port);
 		Server.ConnectToServers(serversAddress.toArray(new String[0]));
 		System.out.println("waiting for connections");
+		Client.waitForClient(clientPort);
 		while (!scanner.nextLine().equals("close"));
 		Logger.print("closing everything");
 		Server.stopEverything();
+		Client.stopEverything();
 		
 	}
 }
