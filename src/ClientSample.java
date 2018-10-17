@@ -68,6 +68,7 @@ public class ClientSample
 
 	public static void main(String args[]) 
 	{ 
-		ClientSample client = new ClientSample("127.0.0.1", 5000); 
+		Scanner scanner = new Scanner(System.in);
+		ClientSample client = new ClientSample(scanner.nextLine(), Integer.parseInt(scanner.nextLine())); 
 	} 
 } 
