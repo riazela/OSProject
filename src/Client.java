@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -208,24 +209,42 @@ public class Client implements RequestCallback{
 			
 		
 		Logger.print(this, "Request granted, Accessing the shared file... \n");
+		Scanner in = null;
+		try {
+			in = new Scanner(new FileReader(sharedFile));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String last = "";
+		String line = "";
+		while (in.hasNextLine()) { 
+			line = in.nextLine();
+			last = line;
+		}
+		in.close();
+		Logger.print(this, "last line was " + last);
+		String[] lastArr = last.split(":");
+		int lastStamp = Integer.parseInt(lastArr[0]);
+		int lastSum = Integer.parseInt(lastArr[1]);
 		
-		if (type == 'w') {
+		if (type == 'r') {
+			Logger.print(this, "reading");
+			try {
+				outputStream.write("Last sum is " + Integer.toString(lastSum) + "\n");
+				outputStream.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				this.close();
+				return;
+			}
+		}
+		else if (type == 'w') {
 			try {
 				Logger.print(this, "writing");
-				Scanner in = new Scanner(new FileReader(sharedFile));
-				String last = "";
-				String line = "";
-				while (in.hasNextLine()) { 
-					line = in.nextLine();
-					last = line;
-				}
-				in.close();
-				Logger.print(this, "last line was " + last);
-				String[] lastArr = last.split(":");
 				Thread.sleep(100);
 				FileWriter fw = new FileWriter(sharedFile, true);
-				int lastStamp = Integer.parseInt(lastArr[0]);
-				int lastSum = Integer.parseInt(lastArr[1]);
 				int newStamp = lastStamp + 1;
 				int newSum = lastSum + currentWriteVal;
 				fw.append("\n");
