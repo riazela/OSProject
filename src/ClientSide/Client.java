@@ -20,7 +20,7 @@ public class Client {
 		OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream()); 
 		BufferedReader in = new BufferedReader( 
 				new InputStreamReader(socket.getInputStream())); 
-		if (type == "r") {
+		if (type.equals("r")) {
 			for (int i = 0;i<100;i++) {
 				out.write("req r\n");
 				out.flush();
@@ -35,7 +35,8 @@ public class Client {
 			Scanner inputFile = new Scanner(new File(path));
 			while (inputFile.hasNextLine()) {
 				String line = inputFile.nextLine();
-				out.write(line + "\n");
+				out.write("req w "+line + "\n");
+				out.flush();
 				System.out.println("sent request for " + line);
 				System.out.println(in.readLine());
 			}

@@ -1,4 +1,6 @@
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -31,11 +33,14 @@ public class TestingPlayGround {
 			} 
 		} 
 
-		public static void main(String args[]) 
+		public static void main(String args[]) throws InterruptedException, IOException 
 		{ 
 //			TestingPlayGround server = new TestingPlayGround(5000); 
-			char a = 'a';
-			String b = "hello " + a;
-			System.out.println(b);
+			System.out.println(1);
+			System.out.println(2);
+			FileWriter fw = new FileWriter(new File("test.txt"),true);
+			fw.write("1");
+			fw.write("2");
+			fw.close();
 		} 
 }

@@ -34,8 +34,10 @@ public class Main {
 		Server.ConnectToServers(serversAddress.toArray(new String[0]));
 		System.out.println("waiting for connections");
 		Client.waitForClient(clientPort);
+		Lamport.startPulsing();
 		while (!scanner.nextLine().equals("close"));
 		Logger.print("closing everything");
+		Lamport.stopPulsing();
 		Server.stopEverything();
 		Client.stopEverything();
 		

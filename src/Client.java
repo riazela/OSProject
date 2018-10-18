@@ -88,8 +88,19 @@ public class Client implements RequestCallback{
 		this.inputSteam = new BufferedReader( 
 				new InputStreamReader(socket.getInputStream())); 
 		this.outputStream = new OutputStreamWriter(socket.getOutputStream());
-
-		this.listen();
+		Thread t = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Client.this.listen();
+				} catch (IOException e) {
+					e.printStackTrace();
+					Client.this.close();
+				}
+			}
+		});
+		t.start();
 	}
 	
 	public void listen () throws IOException {
@@ -208,7 +219,7 @@ public class Client implements RequestCallback{
 //			outputStream.flush();
 			
 		
-		Logger.print(this, "Request granted, Accessing the shared file... \n");
+//		Logger.print(this, "Request granted, Accessing the shared file... \n");
 		Scanner in = null;
 		try {
 			in = new Scanner(new FileReader(sharedFile));
@@ -218,18 +229,25 @@ public class Client implements RequestCallback{
 		}
 		String last = "";
 		String line = "";
-		while (in.hasNextLine()) { 
+		if (!in.hasNextLine()) {
+			last = "0:0";
+		}
+		while (in.hasNextLine()) {
 			line = in.nextLine();
 			last = line;
+			if (line.equals(""))
+				last = "0:0";
 		}
 		in.close();
-		Logger.print(this, "last line was " + last);
+//		Logger.print(this, "last line was " + last);
 		String[] lastArr = last.split(":");
 		int lastStamp = Integer.parseInt(lastArr[0]);
 		int lastSum = Integer.parseInt(lastArr[1]);
 		
 		if (type == 'r') {
 			Logger.print(this, "reading");
+			this.release();
+//			Logger.print(this, "released the write permission");
 			try {
 				outputStream.write("Last sum is " + Integer.toString(lastSum) + "\n");
 				outputStream.flush();
@@ -242,17 +260,19 @@ public class Client implements RequestCallback{
 		}
 		else if (type == 'w') {
 			try {
-				Logger.print(this, "writing");
+//				Logger.print(this, "writing");
 				Thread.sleep(100);
 				FileWriter fw = new FileWriter(sharedFile, true);
 				int newStamp = lastStamp + 1;
 				int newSum = lastSum + currentWriteVal;
 				fw.append("\n");
 				fw.append(Integer.toString(newStamp)+":");
-				Thread.sleep(500);
+				Thread.sleep(100);
 				fw.append(Integer.toString(newSum));
 				fw.close();
 				Logger.print(this, "wrote " + Integer.toString(newStamp)+":" + Integer.toString(newSum));
+				this.release();
+//				Logger.print(this, "released the write permission");
 				try {
 					outputStream.write("Write done successfully! \n");
 					outputStream.flush();
@@ -270,8 +290,6 @@ public class Client implements RequestCallback{
 			
 		}
 		
-		this.release();
-		Logger.print(this, "released the write permission");
 		
 		return;
 	}

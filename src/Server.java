@@ -190,7 +190,9 @@ public class Server {
 	public void sendRequest(int timestamp, String type) {
 		synchronized (outputStream) {
 			try {
-				outputStream.write(Clock.increment()+":"+"request:"+timestamp+":"+type+"\n");
+				String message  =Clock.increment()+":"+"request:"+timestamp+":"+type+"\n";
+				Logger.print(this, "Sent message to " + id + "    " + message);
+				outputStream.write(message);
 				outputStream.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -204,8 +206,11 @@ public class Server {
 	
 	public void sendRelease(int timestamp, String type) {
 		synchronized (outputStream) {
+			
 			try {
-				outputStream.write(Clock.increment()+":"+"release:"+timestamp+":"+type+"\n");
+				String message  = Clock.increment()+":"+"release:"+timestamp+":"+type+"\n";
+				Logger.print(this, "Sent message to " + id + "    " + message);
+				outputStream.write(message);
 				outputStream.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -294,7 +299,9 @@ public class Server {
 	public void sendAck(int timestamp) {
 		synchronized (outputStream) {
 			try {
-				outputStream.write(Clock.increment()+":"+"ack:"+timestamp+"\n");
+				String message  = Clock.increment()+":"+"ack:"+timestamp+"\n";
+				Logger.print(this, "Sent message to " + id + "    " + message);
+				outputStream.write(message);
 				outputStream.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
