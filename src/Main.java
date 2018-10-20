@@ -37,6 +37,7 @@ public class Main {
 
 		Server.startListening(port);
 		Server.ConnectToServers(serversAddress.toArray(new String[0]));
+		System.out.println("Server started on port " + String.valueOf(port));
 		System.out.println("waiting for connections");
 		Client.waitForClient(clientPort);
 		Lamport.startPulsing();

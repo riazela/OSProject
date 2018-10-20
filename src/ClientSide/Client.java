@@ -37,6 +37,8 @@ public class Client {
 		BufferedReader in = new BufferedReader( 
 				new InputStreamReader(socket.getInputStream())); 
 		
+		System.out.println("Client started on port " + ipPort[1] );
+		
 		// ... the code being measured s tarts ...
 		startTime = System.currentTimeMillis();
 		if (type.equals("r")) {
@@ -97,6 +99,7 @@ public class Client {
 		out.write("close");
 		out.flush();
 		socket.close();
+		System.out.println("Client closed on port "  + ipPort[1] );
 		
 	}
 }
