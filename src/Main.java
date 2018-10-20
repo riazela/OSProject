@@ -7,8 +7,13 @@ public class Main {
 	
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("Enter the config file path");
-		String path = scanner.nextLine();
+//		System.out.println("Enter the config file path");
+//		String path = scanner.nextLine();
+		if(args.length < 1) {
+			System.out.println("Not enough args!");
+			return;
+		}
+		String path = args[0];
 		Scanner fileScanner;
 		try {
 			fileScanner = new Scanner(new File(path));

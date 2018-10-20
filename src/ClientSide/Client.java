@@ -21,11 +21,17 @@ public class Client {
 		
 
 		
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("writer or reader or time? (r/w/t)");
-		String type = scanner.nextLine();
-		System.out.println("Server IP:Port?");
-		String[] ipPort = scanner.nextLine().split(":");
+//		Scanner scanner = new Scanner(System.in);
+//		System.out.println("writer or reader or time? (r/w/t)");
+//		String type = scanner.nextLine();
+		if(args.length < 2) {
+			System.out.println("Not enough args!");
+			return;
+		}
+		String type = args[0];
+//		System.out.println("Server IP:Port?");
+//		String[] ipPort = scanner.nextLine().split(":");
+		String[] ipPort = args[1].split(":");
 		Socket socket = new Socket(ipPort[0],Integer.parseInt(ipPort[1]));
 		OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream()); 
 		BufferedReader in = new BufferedReader( 
@@ -42,8 +48,13 @@ public class Client {
 		}
 		else if (type.equals("w"))
 		{
-			System.out.println("Input file?");
-			String path = scanner.nextLine();
+//			System.out.println("Input file?");
+//			String path = scanner.nextLine();
+			if(args.length < 3) {
+				System.out.println("Not enough args!");
+				return;
+			}
+			String path = args[2];
 			Scanner inputFile = new Scanner(new File(path));
 			while (inputFile.hasNextLine()) {
 				String line = inputFile.nextLine();
@@ -61,8 +72,13 @@ public class Client {
 		}
 		else if (type.equals("t"))
 		{
-			System.out.println("Input file?");
-			String path = scanner.nextLine();
+//			System.out.println("Input file?");
+//			String path = scanner.nextLine();
+			if(args.length < 3) {
+				System.out.println("Not enough args!");
+				return;
+			}
+			String path = args[2];
 			Scanner inputFile = new Scanner(new File(path));
 			while (inputFile.hasNextLine()) {
 				String line = inputFile.nextLine();
