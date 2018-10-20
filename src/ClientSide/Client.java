@@ -8,11 +8,21 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Client {
 	public static void main(String[] args) throws NumberFormatException, UnknownHostException, IOException {
+
+		// Program to calculate execution time or elapsed time in Java
+
+		long startTime = 0;
+		long endTime = 0;
+		long timeElapsed = 0;
+		
+
+		
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("writer or reader? (r/w)");
+		System.out.println("writer or reader or time? (r/w/t)");
 		String type = scanner.nextLine();
 		System.out.println("Server IP:Port?");
 		String[] ipPort = scanner.nextLine().split(":");
@@ -20,15 +30,17 @@ public class Client {
 		OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream()); 
 		BufferedReader in = new BufferedReader( 
 				new InputStreamReader(socket.getInputStream())); 
+		
+		// ... the code being measured s tarts ...
+		startTime = System.currentTimeMillis();
 		if (type.equals("r")) {
 			for (int i = 0;i<100;i++) {
 				out.write("req r\n");
 				out.flush();
 				System.out.println(in.readLine());
 			}
-			
 		}
-		else
+		else if (type.equals("w"))
 		{
 			System.out.println("Input file?");
 			String path = scanner.nextLine();
@@ -41,9 +53,34 @@ public class Client {
 				System.out.println(in.readLine());
 			}
 			inputFile.close();
+			
+			// ... the code being measured ends ...
+			endTime = System.currentTimeMillis();
+			timeElapsed = endTime - startTime;
+			System.out.println("Execution time with Lamport in milliseconds: " + timeElapsed);
+		}
+		else if (type.equals("t"))
+		{
+			System.out.println("Input file?");
+			String path = scanner.nextLine();
+			Scanner inputFile = new Scanner(new File(path));
+			while (inputFile.hasNextLine()) {
+				String line = inputFile.nextLine();
+				out.write("t\n");
+				out.flush();
+				System.out.println("wrting without lamport " + line);
+				System.out.println(in.readLine());
+			}
+			inputFile.close();
+			
+			// ... the code being measured ends ...
+			endTime = System.currentTimeMillis();
+			timeElapsed = endTime - startTime;
+			System.out.println("Execution time WITHOUT Lamport in milliseconds: " + timeElapsed);
 		}
 		out.write("close");
 		out.flush();
 		socket.close();
+		
 	}
 }

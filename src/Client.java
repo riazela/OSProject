@@ -19,6 +19,7 @@ public class Client implements RequestCallback{
 	public static ArrayList<Request> allRequests = new ArrayList<Request>();
 	private static boolean waitingForNewClients = true;
 	private static String sharedFile="output.txt";
+	private static String timeFile="timeonly.txt";
 	
 		
 	public static void waitForClient(int port) {
@@ -157,24 +158,9 @@ public class Client implements RequestCallback{
 				this.hasPendingReq = true;
 				Logger.print(this, "sent request to all other servers");
 				break;
-//			case "release":
-//				if(!hasPendingReq) {
-//					System.out.println("Closing the client on port " + this.socket.getPort() + ", released while has no request");
-//					outputStream.write("Has no pending request to release! \n");
-//					outputStream.flush();
-//					this.close();
-//					return;	
-//				}
-//				else if(!isGranted) {
-//					System.out.println("Closing the client on port " + this.socket.getPort() + ", released while not granted");
-//					outputStream.write("Has no granted request to release! \n");
-//					outputStream.flush();
-//					this.close();
-//					return;
-//				}
-//				
-//				release();
-//				break;
+			case "t":
+				writeForTime();
+				break;
 			case "close":
 				this.close();
 				return;
@@ -210,6 +196,7 @@ public class Client implements RequestCallback{
 		}
 		
 	}
+	
 
 	@Override
 	public void grantAccess(char type) {
@@ -295,6 +282,53 @@ public class Client implements RequestCallback{
 	}
 	
 	
+	
+	public void writeForTime() {
+		Scanner in = null;
+		try {
+			in = new Scanner(new FileReader(timeFile));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String last = "";
+		String line = "";
+		if (!in.hasNextLine()) {
+			last = "0:0";
+		}
+		while (in.hasNextLine()) {
+			line = in.nextLine();
+			last = line;
+			if (line.equals(""))
+				last = "0:0";
+		}
+		in.close();
+		String[] lastArr = last.split(":");
+		int lastStamp = Integer.parseInt(lastArr[0]);
+		int lastSum = Integer.parseInt(lastArr[1]);
+		try {
+			Thread.sleep(100);
+			FileWriter fw = new FileWriter(timeFile, true);
+			int newStamp = lastStamp + 1;
+			int newSum = lastSum + currentWriteVal;
+			fw.append("\n");
+			fw.append(Integer.toString(newStamp)+":");
+			Thread.sleep(100);
+			fw.append(Integer.toString(newSum));
+			fw.close();
+			try {
+				outputStream.write("Write for time measure done!\n");
+				outputStream.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
 	
 	
 

@@ -1,0 +1,17 @@
+Lamport Distributed Writing Time:
+
+10: Execution time with Lamport in milliseconds: 195833
+
+11: Execution time with Lamport in milliseconds: 181955
+
+12: Execution time with Lamport in milliseconds: 125064
+
+
+One Client Standalone Writing Time:
+
+10: Execution time WITHOUT Lamport in milliseconds: 35471
+
+11: Execution time WITHOUT Lamport in milliseconds: 52611
+
+12: Execution time WITHOUT Lamport in milliseconds: 43755
+
